@@ -2,7 +2,7 @@
 ### Control y gestión de eventos, boletos y asistentes para organizadoras de eventos
 
 ## 🎟️ ¿Qué es RegCon?
-**RegCon** es un sistema integral diseñado para optimizar la gestión de convenciones,congresos y eventos profesionales. La plataforma permite a los administradores crear y gestionar eventos personalizados, **facilitando el proceso de registro y la administración de participantes, entradas y actividades**. El sistema proporciona una solución tecnológica que permite a los organizadores no solo registrar y controlar la asistencia de los usuarios de manera física, sino también extender el registro a una plataforma en línea, ampliando el alcance y la eficiencia del proceso de inscripción y validación de asistencia. RegCon se divide en 2 herramientas fundamentales:
+**RegCon** es un sistema integral diseñado para optimizar la gestión de convenciones,congresos y eventos profesionales. La plataforma permite a los administradores crear y gestionar eventos personalizados, **facilitando el proceso de registro y la administración de participantes, entradas y actividades**. El sistema proporciona una solución tecnológica integrador multuples funciones en un solo lugar, lo que permite a los organizadores no solo registrar y controlar la asistencia de los usuarios de manera física, sino también extender el registro a una plataforma en línea, ampliando el alcance y la eficiencia del proceso de inscripción y validación de asistencia. RegCon se divide en 2 herramientas fundamentales:
 - RegCon Tool: Una herramienta administrativa completa que permite a los organizadores tener el control de sus eventos, crear boletos, monitorear usuarios, registrar asistencias, etc.
 - RegCon Events: Es una plataforma para usuarios donde los eventos se muestran y ellos pueden adquirir sus boletos para el evento de su interes.
 
@@ -25,4 +25,10 @@ RegCon es un sistema desarrollado con las siguientes tecnologias:
 ### RegCon (Versión web):
 - **Frontend**: React + Vite
 - **Backend**: Express.js
-- **Database**: PostgreSQL en la nube
+- **Database**: PostgreSQL en la nube (Supabase)
+- **Plataformas de producción**: Para frontend **Vercel**, para backend **Back4App**
+- **Servidor SMTP**: Brevo
+- **Verificador de cuentas**: Supabase
+
+### RegCon (Versión Móvil):
+- **Desarrollo**: Flutter
