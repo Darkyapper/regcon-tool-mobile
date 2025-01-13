@@ -2,7 +2,7 @@
 ### Control y gestión de eventos, boletos y asistentes para organizadoras de eventos
 
 ## 🎟️ ¿Qué es RegCon?
-**RegCon** es un sistema integral diseñado para optimizar la gestión de convenciones,congresos y eventos profesionales. La plataforma permite a los administradores crear y gestionar eventos personalizados, **facilitando el proceso de registro y la administración de participantes, entradas y actividades**. El sistema proporciona una solución tecnológica que permite a los organizadores no solo registrar y controlar la asistencia de los usuarios de manera física, sino también extender el registro a una plataforma en línea, ampliando el alcance y la eficiencia del proceso de inscripción y validación de asistencia. RegCon se divide en 2 herramientas fundamentales:
+**RegCon** es un sistema integral diseñado para optimizar la gestión de convenciones,congresos y eventos profesionales. La plataforma permite a los administradores crear y gestionar eventos personalizados, **facilitando el proceso de registro y la administración de participantes, entradas y actividades**. El sistema proporciona una solución tecnológica integrador multuples funciones en un solo lugar, lo que permite a los organizadores no solo registrar y controlar la asistencia de los usuarios de manera física, sino también extender el registro a una plataforma en línea, ampliando el alcance y la eficiencia del proceso de inscripción y validación de asistencia. RegCon se divide en 2 herramientas fundamentales:
 - RegCon Tool: Una herramienta administrativa completa que permite a los organizadores tener el control de sus eventos, crear boletos, monitorear usuarios, registrar asistencias, etc.
 - RegCon Events: Es una plataforma para usuarios donde los eventos se muestran y ellos pueden adquirir sus boletos para el evento de su interes.
 
@@ -18,11 +18,3 @@ El proceso tradicional, basado en listas de asistencia manuales y verificación 
 - **Aplicaciones para su equipo**: RegCon no solo ofrece las herramientas para que pueda llevar su evento a cabo, si no, que también ofrece la capacidad de dividir el trabajo con equipos donde podrá intrgrar y dar diferentes roles a los mimebros de su organización.
 - **Informes y estadísticas**: Los informes que RegCon proporciona permite imprimir información de boletos, asistencias y usuarios si se requieran de forma fisica o digital, además de mostrar las estadísticas de sus eventos para que pueda tomar decisiones inteligentes a futuro
 - **Aplicaciones móviles**: Tiene a alcance de su mano una herramienta administrtiva que le permitirá realizar alunas funciones como validar boletos, monitorear eventos, administrar, entre varias funciones más.
-
-# 🔧 Especificaciones técnicas para desarrolladores
-RegCon es un sistema desarrollado con las siguientes tecnologias:
-
-### RegCon (Versión web):
-- **Frontend**: React + Vite
-- **Backend**: Express.js
-- **Database**: PostgreSQL en la nube
