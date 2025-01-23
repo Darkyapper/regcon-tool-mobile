@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'auth_service.dart';
 import 'shared_prefs.dart';
-import 'login.dart'; // Importa la pantalla de login
+import 'login.dart';
+import 'showEvents.dart';
+import 'addEvents.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -41,8 +43,23 @@ class _HomeScreenState extends State<HomeScreen> {
     await SharedPrefs.clear();
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(
-          builder: (context) => LoginScreen()), // Usa LoginScreen aquí
+      MaterialPageRoute(builder: (context) => LoginScreen()),
+    );
+  }
+
+  // Método para manejar el registro de eventos
+  void _registerEvent() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AddEventsScreen()),
+    );
+  }
+
+  // Método para mostrar los eventos
+  void _showEvents() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ShowEventsScreen()),
     );
   }
 
@@ -69,8 +86,22 @@ class _HomeScreenState extends State<HomeScreen> {
                   Text('Workgroup ID: $_workgroupId'),
                   Text('Role ID: $_roleId'),
                   SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        onPressed: _registerEvent,
+                        child: Text('Registrar eventos'),
+                      ),
+                      ElevatedButton(
+                        onPressed: _showEvents,
+                        child: Text('Mostrar eventos'),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
                   Expanded(
-                    child: _buildEventList(), // Aquí se mostrarán los eventos
+                    child: _buildEventList(),
                   ),
                 ],
               ),
@@ -80,8 +111,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Método para construir la lista de eventos (por ahora vacía)
   Widget _buildEventList() {
-    // Aquí puedes hacer la petición a tu API para obtener los eventos
-    // y mostrarlos en un ListView, GridView, etc.
     return Center(
       child: Text('Aquí se mostrarán los eventos'),
     );

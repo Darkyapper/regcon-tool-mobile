@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'auth_service.dart';
 import 'login.dart';
-import 'home.dart'; // Importa la pantalla de home
+import 'home.dart';
 
 void main() async {
-  WidgetsFlutterBinding
-      .ensureInitialized(); // Asegura que Flutter esté inicializado
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 
@@ -19,48 +18,55 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: SplashScreen(), // Pantalla de inicio con el logo
+      initialRoute: '/',
+      routes: {
+        '/': (context) => SplashScreen(),
+        '/home': (context) => HomeScreen(),
+        '/login': (context) => LoginScreen(),
+        
+      },
     );
   }
 }
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
-  @override
-  _SplashScreenState createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    super.initState();
-    _checkAuthStatus();
-  }
-
-  // Método para verificar el estado de autenticación
-  Future<void> _checkAuthStatus() async {
-    await Future.delayed(
-        Duration(seconds: 3)); // Espera 3 segundos (simula carga)
-
-    final isLoggedIn =
-        await AuthService.validateToken(); // Verifica si hay un token válido
-
-    // Navega a la pantalla correspondiente
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) => isLoggedIn ? HomeScreen() : LoginScreen(),
-      ),
-    );
+  Future<bool> _checkAuthStatus() async {
+    try {
+      await Future.delayed(Duration(seconds: 3));
+      return await AuthService.validateToken();
+    } catch (e) {
+      print('Error al validar el token: $e');
+      return false;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white, // Fondo blanco
-      body: Center(
-        child: Image.asset('assets/logo.png'), // Muestra el logo
-      ),
+    return FutureBuilder<bool>(
+      future: _checkAuthStatus(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Scaffold(
+            backgroundColor: Colors.white,
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset('assets/logo.png', width: 150, height: 150),
+                SizedBox(height: 20),
+                CircularProgressIndicator(),
+              ],
+            ),
+          );
+        }
+
+        if (snapshot.hasError || !snapshot.hasData || !snapshot.data!) {
+          return LoginScreen();
+        }
+
+        return HomeScreen();
+      },
     );
   }
 }

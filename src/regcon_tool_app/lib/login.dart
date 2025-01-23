@@ -27,21 +27,34 @@ class _LoginScreenState extends State<LoginScreen> {
         );
 
         if (success) {
-          Fluttertoast.showToast(msg: 'Login exitoso');
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Login exitoso')),
+          );
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => HomeScreen()),
           );
         } else {
-          Fluttertoast.showToast(msg: 'Error en el login');
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error en el login')),
+          );
         }
       } catch (e) {
-        Fluttertoast.showToast(msg: 'Error: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
         print('Error durante el login: $e'); // Log para depuración
       } finally {
         setState(() => _isLoading = false);
       }
     }
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -62,6 +75,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor ingresa tu email';
+                  } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                    return 'Por favor ingresa un email válido';
                   }
                   return null;
                 },
