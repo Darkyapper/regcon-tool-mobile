@@ -49,13 +49,18 @@ class SplashScreen extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
             backgroundColor: Colors.white,
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset('assets/logo.png', width: 150, height: 150),
-                SizedBox(height: 20),
-                CircularProgressIndicator(),
-              ],
+            body: Center(
+              child: Column(
+                mainAxisAlignment:
+                    MainAxisAlignment.center, // Centra verticalmente
+                crossAxisAlignment:
+                    CrossAxisAlignment.center, // Centra horizontalmente
+                children: [
+                  Image.asset('assets/logo.png', width: 150, height: 150),
+                  SizedBox(height: 20),
+                  CircularProgressIndicator(),
+                ],
+              ),
             ),
           );
         }
