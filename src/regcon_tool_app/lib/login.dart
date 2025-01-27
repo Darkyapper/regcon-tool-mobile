@@ -69,6 +69,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  // Logo de la aplicación
+                  Image.asset(
+                    'assets/regcon-logo.png', // Ruta de la imagen
+                    height: 60, // Altura del logo
+                    width: 120, // Ancho del logo
+                  ),
+                  SizedBox(height: 8), // Espacio entre el logo y el texto
                   Text(
                     '¡Bienvenido de nuevo!',
                     style: TextStyle(
@@ -153,7 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             padding: EdgeInsets.symmetric(
                                 vertical: 16, horizontal: 32),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(20),
                             ),
                           ),
                           child: Text(
