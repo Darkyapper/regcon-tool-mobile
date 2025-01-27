@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 
 class ShowEventsScreen extends StatefulWidget {
-  const ShowEventsScreen({Key? key}) : super(key: key);
+  const ShowEventsScreen({super.key});
 
   @override
   _ShowEventsScreenState createState() => _ShowEventsScreenState();

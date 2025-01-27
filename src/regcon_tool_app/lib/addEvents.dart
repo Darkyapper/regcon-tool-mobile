@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'shared_prefs.dart';
 
 class AddEventsScreen extends StatefulWidget {
-  const AddEventsScreen({Key? key}) : super(key: key);
+  const AddEventsScreen({super.key});
 
   @override
   _AddEventsScreenState createState() => _AddEventsScreenState();

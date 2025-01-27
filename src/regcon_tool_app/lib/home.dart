@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'auth_service.dart';
 import 'shared_prefs.dart';
 import 'login.dart';
 import 'showEvents.dart';

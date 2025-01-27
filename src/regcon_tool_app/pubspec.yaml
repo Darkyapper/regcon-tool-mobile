@@ -33,7 +33,7 @@ dependencies:
   dio: ^5.3.2
   http: ^0.13.3 # Para hacer peticiones HTTP
   shared_preferences: ^2.0.6 # Para guardar el token localmente
-  fluttertoast: ^8.0.8 # Para mostrar mensajes toast
+  fluttertoast: ^8.0.8 # Para mostrar mensajes toast  
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -80,11 +80,15 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
+        - asset: assets/fonts/Poppins-Bold.ttf
+        - asset: assets/fonts/Poppins-ExtraBold.ttf
+        - asset: assets/fonts/Poppins-Light.ttf
+        - asset: assets/fonts/Poppins-SemiBold.ttf
+        - asset: assets/fonts/Poppins-Thin.ttf
   #         style: italic
   #   - family: Trajan Pro
   #     fonts:
