@@ -71,9 +71,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   // Logo de la aplicación
                   Image.asset(
-                    'assets/regcon-logo.png', // Ruta de la imagen
-                    height: 60, // Altura del logo
-                    width: 120, // Ancho del logo
+                    'assets/regcon-tool-logo.png', // Ruta de la imagen
+                    height: 80, // Altura del logo
+                    width: 190, // Ancho del logo
                   ),
                   SizedBox(height: 8), // Espacio entre el logo y el texto
                   Text(
@@ -87,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'Inicia sesión para continuar',
+                    'Inicie con una cuenta de administrador',
                     style: TextStyle(
                       fontFamily: 'Poppins', // Usar la fuente Poppins
                       fontSize: 16,
@@ -99,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   TextFormField(
                     controller: _emailController,
                     decoration: InputDecoration(
-                      labelText: 'Email',
+                      labelText: 'Correo',
                       labelStyle: TextStyle(
                         fontFamily: 'Poppins', // Usar la fuente Poppins
                         fontWeight: FontWeight.normal, // Poppins-Regular
@@ -179,7 +179,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       // Aquí puedes añadir la lógica para recuperar la contraseña
                     },
                     child: Text(
-                      '¿Olvidaste tu contraseña?',
+                      '¿Problemas para iniciar sesión?',
                       style: TextStyle(
                         fontFamily: 'Poppins', // Usar la fuente Poppins
                         color: Color(0xFFEB6D1E),
@@ -192,7 +192,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       // Aquí puedes añadir la lógica para crear una cuenta
                     },
                     child: Text(
-                      '¿No tienes una cuenta? ¡Crea una!',
+                      '¿No tiene una cuenta? Cree una',
                       style: TextStyle(
                         fontFamily: 'Poppins', // Usar la fuente Poppins
                         color: Color(0xFFEB6D1E),

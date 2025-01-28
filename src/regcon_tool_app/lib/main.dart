@@ -56,7 +56,8 @@ class SplashScreen extends StatelessWidget {
                 crossAxisAlignment:
                     CrossAxisAlignment.center, // Centra horizontalmente
                 children: [
-                  Image.asset('assets/logo.png', width: 150, height: 150),
+                  Image.asset('assets/regcon-tool-icon.png',
+                      width: 150, height: 150),
                   SizedBox(height: 20),
                   CircularProgressIndicator(),
                 ],

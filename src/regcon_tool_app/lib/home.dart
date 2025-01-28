@@ -13,7 +13,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0; // Índice para la barra de navegación inferior
-  List<dynamic> _events = []; // Lista de eventos
+  final List<dynamic> _events = []; // Lista de eventos
   int _offset = 0; // Offset para la paginación
   bool _isLoading = false; // Para controlar la carga de más eventos
   final ScrollController _scrollController =

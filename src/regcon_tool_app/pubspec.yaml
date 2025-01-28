@@ -64,6 +64,10 @@ flutter:
   assets:
     - assets/logo.png
     - assets/regcon-logo.png
+    - assets/regcon-tool-icon.png
+    - assets/regcon-tool-icon-white.png
+    - assets/regcon-tool-logo.png
+    - assets/regcon-tool-logo-white.png
   
   # To add assets to your application, add an assets section, like this:
   # assets:
