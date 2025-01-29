@@ -7,7 +7,7 @@ import 'createTickets.dart';
 class TicketCategoryScreen extends StatefulWidget {
   final int eventId;
 
-  TicketCategoryScreen({required this.eventId});
+  const TicketCategoryScreen({super.key, required this.eventId});
 
   @override
   _TicketCategoryScreenState createState() => _TicketCategoryScreenState();

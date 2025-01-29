@@ -213,7 +213,7 @@ class _CreateTicketsScreenState extends State<CreateTicketsScreen> {
                           ),
                         ),
                       );
-                    }).toList(),
+                    }),
                     const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: _handleCreateTickets,
