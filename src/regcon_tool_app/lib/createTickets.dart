@@ -25,7 +25,6 @@ class _CreateTicketsScreenState extends State<CreateTicketsScreen> {
     _fetchAssignedCategories();
   }
 
-  // Recuperar las categorías asignadas al evento desde el servidor
   Future<void> _fetchAssignedCategories() async {
     final url = Uri.parse(
         'https://recgonback-8awa0rdv.b4a.run/ticket-events/${widget.eventId}');
@@ -42,7 +41,11 @@ class _CreateTicketsScreenState extends State<CreateTicketsScreen> {
         for (var category in responseData['data']) {
           final categoryId = category['category_id'];
 
-          // Obtener información detallada de la categoría
+          if (categoryId == null) {
+            print("Advertencia: Se encontró una categoría sin 'category_id'");
+            continue;
+          }
+
           final categoryName = await _fetchCategoryName(categoryId);
 
           _ticketCategories.add({
@@ -62,7 +65,6 @@ class _CreateTicketsScreenState extends State<CreateTicketsScreen> {
     }
   }
 
-  // Obtener el nombre de la categoría desde la API
   Future<String?> _fetchCategoryName(int categoryId) async {
     final url = Uri.parse(
         'https://recgonback-8awa0rdv.b4a.run/ticket-categories/$categoryId');
@@ -71,8 +73,7 @@ class _CreateTicketsScreenState extends State<CreateTicketsScreen> {
 
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
-      return responseData['data']
-          ['name']; // Ajusta según la estructura real de la API
+      return responseData['data']['name'];
     } else {
       print(
           "Error al obtener el nombre de la categoría: ${response.statusCode}");
@@ -80,7 +81,6 @@ class _CreateTicketsScreenState extends State<CreateTicketsScreen> {
     }
   }
 
-  // Crear los boletos con la cantidad ingresada
   Future<void> _createTickets() async {
     final workgroupId = await SharedPrefs.getWorkgroupId();
     if (workgroupId == null) return;
@@ -156,8 +156,9 @@ class _CreateTicketsScreenState extends State<CreateTicketsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Text('Crear Boletos'),
-          backgroundColor: const Color(0xFFEB6D1E)),
+        title: const Text('Crear Boletos'),
+        backgroundColor: const Color(0xFFEB6D1E),
+      ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : Padding(
