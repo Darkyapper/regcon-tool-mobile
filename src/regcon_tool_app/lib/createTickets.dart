@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'shared_prefs.dart';
+import 'home.dart';
 
 class CreateTicketsScreen extends StatefulWidget {
   final int eventId;
@@ -33,16 +34,18 @@ class _CreateTicketsScreenState extends State<CreateTicketsScreen> {
 
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
+      print("Respuesta de la API (categorías asignadas): $responseData");
 
       if (responseData['data'] is List) {
         _ticketCategories.clear();
         _controllers.clear();
 
         for (var category in responseData['data']) {
-          final categoryId = category['category_id'];
+          final categoryId = category['ticketcategory_id'];
 
           if (categoryId == null) {
-            print("Advertencia: Se encontró una categoría sin 'category_id'");
+            print(
+                "Advertencia: Se encontró una categoría sin 'ticketcategory_id'");
             continue;
           }
 
@@ -56,6 +59,7 @@ class _CreateTicketsScreenState extends State<CreateTicketsScreen> {
           _controllers.add(TextEditingController());
         }
 
+        print("Categorías asignadas: $_ticketCategories");
         setState(() {});
       } else {
         print("Error: 'data' no es una lista en la respuesta de la API");
@@ -81,9 +85,22 @@ class _CreateTicketsScreenState extends State<CreateTicketsScreen> {
     }
   }
 
-  Future<void> _createTickets() async {
+  Future<void> _handleCreateTickets() async {
+    if (!_formKey.currentState!.validate()) {
+      print("El formulario no es válido");
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
     final workgroupId = await SharedPrefs.getWorkgroupId();
-    if (workgroupId == null) return;
+    if (workgroupId == null) {
+      print("Error: workgroupId es null");
+      setState(() => _isLoading = false);
+      return;
+    }
+
+    print("Creando boletos...");
 
     for (int i = 0; i < _ticketCategories.length; i++) {
       final category = _ticketCategories[i];
@@ -92,13 +109,22 @@ class _CreateTicketsScreenState extends State<CreateTicketsScreen> {
       final quantity = int.tryParse(_controllers[i].text) ?? 0;
 
       if (quantity > 0) {
+        print("Creando $quantity boletos para la categoría $categoryName");
         for (int j = 0; j < quantity; j++) {
           final ticketCode = _generateRandomCode();
-          await _createTicket(
-              ticketCode, categoryName, categoryId, workgroupId);
+          final success =
+              await _createTicket(ticketCode, categoryId, workgroupId);
+          if (!success) {
+            print("Error al crear un boleto. Deteniendo proceso.");
+            setState(() => _isLoading = false);
+            return;
+          }
         }
       }
     }
+
+    setState(() => _isLoading = false);
+    _navigateToAdminHome();
   }
 
   String _generateRandomCode() {
@@ -108,48 +134,31 @@ class _CreateTicketsScreenState extends State<CreateTicketsScreen> {
         .join();
   }
 
-  Future<void> _createTicket(
-      String code, String name, int categoryId, int workgroupId) async {
+  Future<bool> _createTicket(
+      String code, int categoryId, int workgroupId) async {
     final url = Uri.parse('https://recgonback-8awa0rdv.b4a.run/tickets');
-    await http.post(
+    final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
       body: json.encode({
         'code': code,
-        'name': name,
         'category_id': categoryId,
         'workgroup_id': workgroupId,
         'status': 'Sin Usar',
       }),
     );
+
+    if (response.statusCode == 200) {
+      print("Boleto creado exitosamente: ${response.body}");
+      return true;
+    } else {
+      print("Error al crear el boleto: ${response.statusCode}");
+      return false;
+    }
   }
 
-  Future<void> _handleCreateTickets() async {
-    if (!_formKey.currentState!.validate()) return;
-    setState(() => _isLoading = true);
-    _formKey.currentState!.save();
-
-    await _createTickets();
-
-    setState(() => _isLoading = false);
-    _showSuccessModal();
-  }
-
-  void _showSuccessModal() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Éxito'),
-        content: const Text('Boletos creados exitosamente.'),
-        actions: [
-          TextButton(
-            onPressed: () =>
-                Navigator.popUntil(context, ModalRoute.withName('/home')),
-            child: const Text('Aceptar'),
-          ),
-        ],
-      ),
-    );
+  void _navigateToAdminHome() {
+    Navigator.popUntil(context, ModalRoute.withName('/home'));
   }
 
   @override
@@ -167,6 +176,11 @@ class _CreateTicketsScreenState extends State<CreateTicketsScreen> {
                 key: _formKey,
                 child: ListView(
                   children: [
+                    if (_ticketCategories.isEmpty)
+                      const Center(
+                        child:
+                            Text('No hay categorías asignadas a este evento.'),
+                      ),
                     ..._ticketCategories.map((category) {
                       int index = _ticketCategories.indexOf(category);
                       return Card(
@@ -196,6 +210,7 @@ class _CreateTicketsScreenState extends State<CreateTicketsScreen> {
                         ),
                       );
                     }).toList(),
+                    const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: _handleCreateTickets,
                       child: const Text('Crear Boletos'),
