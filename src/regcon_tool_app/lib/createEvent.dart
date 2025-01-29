@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'shared_prefs.dart';
-import 'createTickets.dart';
+import 'createCategories.dart';
 
 class CreateEventScreen extends StatefulWidget {
   const CreateEventScreen({super.key});
@@ -97,7 +97,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           context,
           MaterialPageRoute(
             builder: (context) =>
-                CreateTicketsScreen(eventId: responseData['data']['id']),
+                TicketCategoryScreen(eventId: responseData['data']['id']),
           ),
         );
       } else {

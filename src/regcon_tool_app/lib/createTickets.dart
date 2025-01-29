@@ -16,63 +16,86 @@ class CreateTicketsScreen extends StatefulWidget {
 class _CreateTicketsScreenState extends State<CreateTicketsScreen> {
   final _formKey = GlobalKey<FormState>();
   final List<Map<String, dynamic>> _ticketCategories = [];
-  final List<TextEditingController> _ticketQuantityControllers = [];
-  final bool _isLoading = false;
+  final List<TextEditingController> _controllers = [];
+  bool _isLoading = false;
 
-  Future<void> _createTicketCategory(
-      String name, double price, String description) async {
-    final workgroupId = await SharedPrefs.getWorkgroupId();
-    if (workgroupId == null) return;
+  @override
+  void initState() {
+    super.initState();
+    _fetchAssignedCategories();
+  }
 
-    final url =
-        Uri.parse('https://recgonback-8awa0rdv.b4a.run/ticket-categories');
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode({
-        'name': name,
-        'price': price,
-        'description': description,
-        'workgroup_id': workgroupId,
-      }),
-    );
+  // Recuperar las categorías asignadas al evento desde el servidor
+  Future<void> _fetchAssignedCategories() async {
+    final url = Uri.parse(
+        'https://recgonback-8awa0rdv.b4a.run/ticket-events/${widget.eventId}');
+    final response =
+        await http.get(url, headers: {'Content-Type': 'application/json'});
 
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
-      setState(() {
-        _ticketCategories.add({
-          'name': name,
-          'price': price,
-          'description': description,
-          'id': responseData['data']['id'],
-        });
-        _ticketQuantityControllers.add(TextEditingController());
-      });
+
+      if (responseData['data'] is List) {
+        _ticketCategories.clear();
+        _controllers.clear();
+
+        for (var category in responseData['data']) {
+          final categoryId = category['category_id'];
+
+          // Obtener información detallada de la categoría
+          final categoryName = await _fetchCategoryName(categoryId);
+
+          _ticketCategories.add({
+            'category_id': categoryId,
+            'category_name': categoryName ?? 'Categoría sin nombre',
+          });
+
+          _controllers.add(TextEditingController());
+        }
+
+        setState(() {});
+      } else {
+        print("Error: 'data' no es una lista en la respuesta de la API");
+      }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Error al crear la categoría de boletos')),
-      );
+      print("Error al obtener categorías asignadas: ${response.statusCode}");
     }
   }
 
-  Future<void> _createTickets() async {
-    if (_ticketCategories.isEmpty) return;
+  // Obtener el nombre de la categoría desde la API
+  Future<String?> _fetchCategoryName(int categoryId) async {
+    final url = Uri.parse(
+        'https://recgonback-8awa0rdv.b4a.run/ticket-categories/$categoryId');
+    final response =
+        await http.get(url, headers: {'Content-Type': 'application/json'});
 
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      return responseData['data']
+          ['name']; // Ajusta según la estructura real de la API
+    } else {
+      print(
+          "Error al obtener el nombre de la categoría: ${response.statusCode}");
+      return null;
+    }
+  }
+
+  // Crear los boletos con la cantidad ingresada
+  Future<void> _createTickets() async {
     final workgroupId = await SharedPrefs.getWorkgroupId();
     if (workgroupId == null) return;
 
-    for (var category in _ticketCategories) {
-      final categoryId = category['id'];
-      final quantity = int.tryParse(
-              _ticketQuantityControllers[_ticketCategories.indexOf(category)]
-                  .text) ??
-          0;
+    for (int i = 0; i < _ticketCategories.length; i++) {
+      final category = _ticketCategories[i];
+      final categoryId = category['category_id'];
+      final categoryName = category['category_name'] ?? 'Categoría sin nombre';
+      final quantity = int.tryParse(_controllers[i].text) ?? 0;
 
       if (quantity > 0) {
-        for (int i = 0; i < quantity; i++) {
+        for (int j = 0; j < quantity; j++) {
           final ticketCode = _generateRandomCode();
           await _createTicket(
-              ticketCode, category['name'], categoryId, workgroupId);
+              ticketCode, categoryName, categoryId, workgroupId);
         }
       }
     }
@@ -88,84 +111,92 @@ class _CreateTicketsScreenState extends State<CreateTicketsScreen> {
   Future<void> _createTicket(
       String code, String name, int categoryId, int workgroupId) async {
     final url = Uri.parse('https://recgonback-8awa0rdv.b4a.run/tickets');
-    final response = await http.post(
+    await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
       body: json.encode({
         'code': code,
         'name': name,
-        'category_id': categoryId, // Esto es un entero
+        'category_id': categoryId,
+        'workgroup_id': workgroupId,
         'status': 'Sin Usar',
-        'workgroup_id': workgroupId, // Esto también es un entero
       }),
     );
+  }
 
-    if (response.statusCode != 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Error al crear boletos')),
-      );
-    }
+  Future<void> _handleCreateTickets() async {
+    if (!_formKey.currentState!.validate()) return;
+    setState(() => _isLoading = true);
+    _formKey.currentState!.save();
+
+    await _createTickets();
+
+    setState(() => _isLoading = false);
+    _showSuccessModal();
+  }
+
+  void _showSuccessModal() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Éxito'),
+        content: const Text('Boletos creados exitosamente.'),
+        actions: [
+          TextButton(
+            onPressed: () =>
+                Navigator.popUntil(context, ModalRoute.withName('/home')),
+            child: const Text('Aceptar'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Crear Boletos'),
-        backgroundColor: const Color(0xFFEB6D1E),
-      ),
+          title: const Text('Crear Boletos'),
+          backgroundColor: const Color(0xFFEB6D1E)),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : Padding(
               padding: const EdgeInsets.all(16.0),
               child: Form(
                 key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: ListView(
                   children: [
-                    TextFormField(
-                      decoration: const InputDecoration(
-                          labelText: 'Nombre de la Categoría'),
-                      validator: (value) => value == null || value.isEmpty
-                          ? 'Por favor ingresa un nombre'
-                          : null,
-                      onSaved: (value) {
-                        if (value != null) {
-                          _createTicketCategory(value, 10.0, 'Descripción');
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 16),
                     ..._ticketCategories.map((category) {
-                      final controller = _ticketQuantityControllers[
-                          _ticketCategories.indexOf(category)];
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: Row(
-                          children: [
-                            Text(category['name']),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: TextFormField(
-                                controller: controller,
-                                decoration: InputDecoration(
-                                    labelText:
-                                        'Cantidad de ${category['name']}'),
-                                keyboardType: TextInputType.number,
+                      int index = _ticketCategories.indexOf(category);
+                      return Card(
+                        margin: const EdgeInsets.only(bottom: 16),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            children: [
+                              Text(
+                                'Categoría: ${category['category_name']}',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
                               ),
-                            ),
-                          ],
+                              TextFormField(
+                                controller: _controllers[index],
+                                decoration: const InputDecoration(
+                                  labelText: 'Cantidad de Boletos',
+                                ),
+                                keyboardType: TextInputType.number,
+                                validator: (value) =>
+                                    value == null || value.isEmpty
+                                        ? 'Campo requerido'
+                                        : null,
+                              ),
+                            ],
+                          ),
                         ),
                       );
-                    }),
-                    const SizedBox(height: 16),
+                    }).toList(),
                     ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          _formKey.currentState!.save();
-                          _createTickets();
-                        }
-                      },
+                      onPressed: _handleCreateTickets,
                       child: const Text('Crear Boletos'),
                     ),
                   ],
