@@ -158,7 +158,11 @@ class _CreateTicketsScreenState extends State<CreateTicketsScreen> {
   }
 
   void _navigateToAdminHome() {
-    Navigator.popUntil(context, ModalRoute.withName('/home'));
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => AdminHomeScreen()),
+      (Route<dynamic> route) => false,
+    );
   }
 
   @override
