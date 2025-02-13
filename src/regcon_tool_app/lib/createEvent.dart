@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'shared_prefs.dart';
-import 'createCategories.dart';
+import 'uploadImage.dart';
 
 class CreateEventScreen extends StatefulWidget {
   const CreateEventScreen({super.key});
@@ -74,8 +74,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         'location': _location,
         'description': _description,
         'workgroup_id': workgroupId,
-        'image':
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnwpt7I37lDhtvGPNTnX8z0eCkD9ky5zewLA&s',
+        'image': 'https://via.placeholder.com/150',
         'event_category': _eventCategory,
         'is_online': _isOnline,
       }),
@@ -92,12 +91,11 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           const SnackBar(content: Text('Evento creado con éxito')),
         );
 
-        // Redirigir a la pantalla de creación de boletos
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) =>
-                TicketCategoryScreen(eventId: responseData['data']['id']),
+                ImageUploadScreen(eventId: responseData['data']['id']),
           ),
         );
       } else {
@@ -110,51 +108,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         const SnackBar(content: Text('Error al crear el evento')),
       );
     }
-  }
-
-  Future<void> _selectDate() async {
-    final DateTime? selectedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-      builder: (BuildContext context, Widget? child) {
-        return Theme(
-          data: ThemeData.dark().copyWith(
-            primaryColor: const Color(0xFFEB6D1E),
-            colorScheme: ColorScheme.dark(
-                primary: const Color(0xFFEB6D1E),
-                secondary: const Color(0xFFEB6D1E)),
-            buttonTheme:
-                const ButtonThemeData(textTheme: ButtonTextTheme.primary),
-          ),
-          child: child!,
-        );
-      },
-    );
-
-    if (selectedDate != null && selectedDate != _eventDate) {
-      setState(() {
-        _eventDate = selectedDate;
-      });
-    }
-  }
-
-  InputDecoration _buildInputDecoration(String label) {
-    return InputDecoration(
-      labelText: label,
-      labelStyle: const TextStyle(
-        fontFamily: 'Poppins',
-        fontWeight: FontWeight.normal,
-      ),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: Color(0xFFEB6D1E)),
-        borderRadius: BorderRadius.circular(8),
-      ),
-    );
   }
 
   @override
@@ -175,7 +128,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TextFormField(
-                        decoration: _buildInputDecoration('Nombre del Evento'),
+                        decoration:
+                            InputDecoration(labelText: 'Nombre del Evento'),
                         validator: (value) => value == null || value.isEmpty
                             ? 'Por favor ingresa un nombre'
                             : null,
@@ -189,15 +143,28 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                               : '${_eventDate!.toLocal()}'.split(' ')[0],
                         ),
                         readOnly: true,
-                        decoration: _buildInputDecoration('Fecha del Evento'),
-                        onTap: _selectDate,
+                        decoration:
+                            InputDecoration(labelText: 'Fecha del Evento'),
+                        onTap: () async {
+                          final selectedDate = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(2000),
+                            lastDate: DateTime(2100),
+                          );
+                          if (selectedDate != null) {
+                            setState(() {
+                              _eventDate = selectedDate;
+                            });
+                          }
+                        },
                         validator: (value) => _eventDate == null
                             ? 'Por favor selecciona una fecha'
                             : null,
                       ),
                       const SizedBox(height: 16),
                       TextFormField(
-                        decoration: _buildInputDecoration('Ubicación'),
+                        decoration: InputDecoration(labelText: 'Ubicación'),
                         validator: (value) => value == null || value.isEmpty
                             ? 'Por favor ingresa una ubicación'
                             : null,
@@ -205,7 +172,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                       ),
                       const SizedBox(height: 16),
                       TextFormField(
-                        decoration: _buildInputDecoration('Descripción'),
+                        decoration: InputDecoration(labelText: 'Descripción'),
                         maxLines: 3,
                         validator: (value) => value == null || value.isEmpty
                             ? 'Por favor ingresa una descripción'
@@ -214,7 +181,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                       ),
                       const SizedBox(height: 16),
                       DropdownButtonFormField<int>(
-                        decoration: _buildInputDecoration('Categoría'),
+                        decoration: InputDecoration(labelText: 'Categoría'),
                         items: _categories
                             .map((category) => DropdownMenuItem<int>(
                                   value: category['id'],
