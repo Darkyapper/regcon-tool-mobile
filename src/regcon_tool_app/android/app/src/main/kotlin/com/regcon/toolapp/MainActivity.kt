@@ -1,4 +1,4 @@
-package com.example.regcon_tool_app
+package com.regcon.toolapp
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -26,31 +26,51 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
 
   // Método para cargar el último evento creado por el grupo de trabajo
   Future<void> _loadLatestEvent() async {
-    final groupId =
-        await SharedPrefs.getWorkgroupId(); // Usar el método correcto
+    final groupId = await SharedPrefs.getWorkgroupId();
 
     if (groupId == null) {
       setState(() {
         _isLoading = false;
+        _latestEvent = null;
       });
       return;
     }
 
     final url = Uri.parse(
-        'https://recgonback-8awa0rdv.b4a.run/events/10054/?workgroup_id=$groupId');
-    final response = await http.get(url);
+        'https://recgonback-8awa0rdv.b4a.run/all-events?limit=1&latest=true&workgroup_id=$groupId');
 
-    if (response.statusCode == 200) {
-      final decodedResponse = json.decode(response.body); // Decodificar JSON
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final decodedResponse = json.decode(response.body);
+
+        if (decodedResponse['data'] is List &&
+            decodedResponse['data'].isNotEmpty) {
+          setState(() {
+            _latestEvent = decodedResponse['data']
+                [0]; // Tomar el primer evento de la lista
+          });
+        } else {
+          setState(() {
+            _latestEvent = null; // No hay eventos recientes
+          });
+        }
+      } else {
+        setState(() {
+          _latestEvent = null;
+        });
+        print('Error al cargar el evento: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error en la solicitud HTTP: $e');
       setState(() {
-        _latestEvent = decodedResponse['data']; // Obtener el último evento
+        _latestEvent = null;
+      });
+    } finally {
+      setState(() {
         _isLoading = false;
       });
-    } else {
-      setState(() {
-        _isLoading = false;
-      });
-      throw Exception('Error al cargar el último evento');
     }
   }
 
@@ -85,8 +105,9 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
             ),
             SizedBox(width: 10),
             Text(
-              'Panel de Administración',
+              'RegCon Tool',
               style: TextStyle(
+                fontFamily: 'Poppins',
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -160,7 +181,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Image.network(
-              _latestEvent!['image'], // Imagen del evento
+              _latestEvent!['event_image'], // Imagen del evento
               height: 200,
               width: double.infinity,
               fit: BoxFit.cover,
@@ -171,8 +192,9 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    _latestEvent!['name'], // Título del evento
+                    _latestEvent!['event_name'], // Título del evento
                     style: TextStyle(
+                      fontFamily: 'Poppins',
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
@@ -181,6 +203,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                   Text(
                     'Fecha: ${_latestEvent!['event_date']}', // Fecha del evento
                     style: TextStyle(
+                      fontFamily: 'Poppins',
                       fontSize: 16,
                       color: Colors.grey[600],
                     ),
@@ -189,14 +212,17 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                   Text(
                     'Ubicación: ${_latestEvent!['location']}', // Ubicación del evento
                     style: TextStyle(
+                      fontFamily: 'Poppins',
                       fontSize: 16,
                       color: Colors.grey[600],
                     ),
                   ),
                   SizedBox(height: 8),
                   Text(
-                    _latestEvent!['description'], // Descripción del evento
+                    _latestEvent![
+                        'event_description'], // Descripción del evento
                     style: TextStyle(
+                      fontFamily: 'Poppins',
                       fontSize: 16,
                       color: Colors.grey[600],
                     ),
