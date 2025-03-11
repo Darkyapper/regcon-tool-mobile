@@ -17,11 +17,13 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   Map<String, dynamic>?
       _latestEvent; // Último evento creado por el grupo de trabajo
   bool _isLoading = true; // Para controlar la carga del último evento
+  String groupName = 'Cargando...';
 
   @override
   void initState() {
     super.initState();
     _loadLatestEvent(); // Cargar el último evento al iniciar
+    _fecthInfo();
   }
 
   // Método para cargar el último evento creado por el grupo de trabajo
@@ -88,6 +90,39 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       context,
       MaterialPageRoute(builder: (context) => LoginScreen()),
     );
+  }
+
+  Future<void> _fecthInfo() async {
+    final groupId = await SharedPrefs.getWorkgroupId();
+
+    if (groupId == null) {
+      setState(() {
+        groupName = '';
+      });
+      return;
+    }
+
+    final url =
+        Uri.parse('https://recgonback-8awa0rdv.b4a.run/workgroups/$groupId');
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        setState(() {
+          groupName = data['data']['name'];
+        });
+      } else {
+        setState(() {
+          groupName = 'No se puso obtener el nombre';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        groupName = 'Error al hacer la solicitud: $e';
+      });
+    }
   }
 
   @override
@@ -180,6 +215,22 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       padding: EdgeInsets.all(16),
       child: Column(
         children: [
+          Text(
+            'Bienvenido',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF101010)),
+          ),
+          Text(groupName,
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+              )),
+          SizedBox(height: 10),
           Card(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -246,8 +297,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
             },
             child: Text('Ver todos los eventos'),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFFdddbff), // Color naranja
-              foregroundColor: Color(0xFF101010),
+              backgroundColor: Color(0xFF3A31D8), // Color naranja
+              foregroundColor: Color(0xFFF0F0F0),
               padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
               textStyle: TextStyle(
                 fontFamily: 'Poppins',

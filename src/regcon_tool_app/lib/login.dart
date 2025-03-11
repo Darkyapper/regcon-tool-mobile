@@ -82,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       fontFamily: 'Poppins', // Usar la fuente Poppins
                       fontSize: 24,
                       fontWeight: FontWeight.bold, // Poppins-Bold
-                      color: Color(0xFFEB6D1E),
+                      color: Color(0xFF040316),
                     ),
                   ),
                   SizedBox(height: 8),
@@ -101,14 +101,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     decoration: InputDecoration(
                       labelText: 'Correo',
                       labelStyle: TextStyle(
-                        fontFamily: 'Poppins', // Usar la fuente Poppins
-                        fontWeight: FontWeight.normal, // Poppins-Regular
-                      ),
+                          fontFamily: 'Poppins', // Usar la fuente Poppins
+                          fontWeight: FontWeight.normal, // Poppins-Regular
+                          color: Color(0xFF101010)),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFFEB6D1E)),
+                        borderSide: BorderSide(color: Color(0xFF2F27CE)),
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
@@ -128,14 +128,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     decoration: InputDecoration(
                       labelText: 'Contraseña',
                       labelStyle: TextStyle(
-                        fontFamily: 'Poppins', // Usar la fuente Poppins
-                        fontWeight: FontWeight.normal, // Poppins-Regular
-                      ),
+                          fontFamily: 'Poppins', // Usar la fuente Poppins
+                          fontWeight: FontWeight.normal, // Poppins-Regular
+                          color: Color(0xFF101010)),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFFEB6D1E)),
+                        borderSide: BorderSide(color: Color(0xFF2F27CE)),
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
@@ -151,12 +151,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   _isLoading
                       ? CircularProgressIndicator(
                           valueColor:
-                              AlwaysStoppedAnimation<Color>(Color(0xFFEB6D1E)),
+                              AlwaysStoppedAnimation<Color>(Color(0xFF2F27CE)),
                         )
                       : ElevatedButton(
                           onPressed: _login,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFFEB6D1E),
+                            backgroundColor: Color(0xFF2F27CE),
                             padding: EdgeInsets.symmetric(
                                 vertical: 16, horizontal: 32),
                             shape: RoundedRectangleBorder(
@@ -182,7 +182,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       '¿Problemas para iniciar sesión?',
                       style: TextStyle(
                         fontFamily: 'Poppins', // Usar la fuente Poppins
-                        color: Color(0xFFEB6D1E),
+                        color: Color(0xFF101010),
                         fontWeight: FontWeight.bold, // Poppins-Bold
                       ),
                     ),
@@ -195,7 +195,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       '¿No tiene una cuenta? Cree una',
                       style: TextStyle(
                         fontFamily: 'Poppins', // Usar la fuente Poppins
-                        color: Color(0xFFEB6D1E),
+                        color: Color(0xFF101010),
                         fontWeight: FontWeight.bold, // Poppins-Bold
                       ),
                     ),
