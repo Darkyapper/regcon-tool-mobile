@@ -18,12 +18,16 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       _latestEvent; // Último evento creado por el grupo de trabajo
   bool _isLoading = true; // Para controlar la carga del último evento
   String groupName = 'Cargando...';
+  String _credits = '0';
+  String _gains = '0.00';
 
   @override
   void initState() {
     super.initState();
     _loadLatestEvent(); // Cargar el último evento al iniciar
-    _fecthInfo();
+    _fetchName();
+    _fecthGains();
+    _fecthCredits();
   }
 
   // Método para cargar el último evento creado por el grupo de trabajo
@@ -92,7 +96,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     );
   }
 
-  Future<void> _fecthInfo() async {
+  Future<void> _fetchName() async {
     final groupId = await SharedPrefs.getWorkgroupId();
 
     if (groupId == null) {
@@ -115,12 +119,78 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
         });
       } else {
         setState(() {
-          groupName = 'No se puso obtener el nombre';
+          groupName = 'No se pudo obtener el nombre';
         });
       }
     } catch (e) {
       setState(() {
         groupName = 'Error al hacer la solicitud: $e';
+      });
+    }
+  }
+
+  Future<void> _fecthGains() async {
+    final groupId = await SharedPrefs.getWorkgroupId();
+
+    if (groupId == null) {
+      setState(() {
+        _gains = '0.00';
+      });
+      return;
+    }
+
+    final url =
+        Uri.parse('https://recgonback-8awa0rdv.b4a.run/workgroups/$groupId');
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        setState(() {
+          _gains = data['data']['gains'];
+        });
+      } else {
+        setState(() {
+          _gains = '0.00';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _gains = '0.00';
+      });
+    }
+  }
+
+  Future<void> _fecthCredits() async {
+    final groupId = await SharedPrefs.getWorkgroupId();
+
+    if (groupId == null) {
+      setState(() {
+        _credits = '0';
+      });
+      return;
+    }
+
+    final url =
+        Uri.parse('https://recgonback-8awa0rdv.b4a.run/workgroups/$groupId');
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        setState(() {
+          _credits = data['data']['credits_balance'];
+        });
+      } else {
+        setState(() {
+          _credits = '0';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _credits = '0';
       });
     }
   }
@@ -230,6 +300,64 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
               )),
+          SizedBox(height: 20),
+          SizedBox(
+            width: 600,
+            child: Card(
+              color: Color(0xFFDDDBFF),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        RichText(
+                            text: TextSpan(
+                                text: 'Ganancias: ',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                ),
+                                children: <TextSpan>[
+                              TextSpan(
+                                  text: '\$$_gains',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ))
+                            ])),
+                        SizedBox(height: 8),
+                        RichText(
+                            text: TextSpan(
+                                text: 'Creditos Disponibles: ',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                ),
+                                children: <TextSpan>[
+                              TextSpan(
+                                  text: _credits,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ))
+                            ])),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: 20),
+          Text(
+            'Próximo Evento',
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           SizedBox(height: 10),
           Card(
             child: Column(
@@ -282,13 +410,25 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                           color: Colors.grey[600],
                         ),
                       ),
+                      TextButton(
+                        onPressed: () {
+                          print('botón pulsado');
+                        },
+                        child: Text('Ver Detalles'),
+                        style: TextButton.styleFrom(
+                            foregroundColor: Color(0xFF101010),
+                            textStyle: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.w400,
+                            )),
+                      ),
                     ],
                   ),
                 ),
               ],
             ),
           ),
-          SizedBox(height: 20), // Espacio entre la tarjeta y el botón
+          SizedBox(height: 10), // Espacio entre la tarjeta y el botón
           ElevatedButton(
             onPressed: () {
               // Acción que se ejecuta cuando se presiona el botón
