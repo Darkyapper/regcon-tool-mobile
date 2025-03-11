@@ -95,7 +95,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor:
-            Color(0xFFEB6D1E), // Color naranja para la barra superior
+            Color(0xFF2F27CE), // Color naranja para la barra superior
         title: Row(
           children: [
             Image.asset(
@@ -107,10 +107,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
             Text(
               'RegCon Tool',
               style: TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+                  fontFamily: 'Poppins',
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFFF6F6F6)),
             ),
           ],
         ),
@@ -124,6 +124,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       body: _buildBody(), // Contenido principal de la pantalla
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
+        selectedItemColor: Color(0xFF7C79DC),
+        unselectedItemColor: Color(0xFFAAA9B2),
         onTap: _onItemTapped,
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
@@ -176,62 +178,85 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
 
     return SingleChildScrollView(
       padding: EdgeInsets.all(16),
-      child: Card(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Image.network(
-              _latestEvent!['event_image'], // Imagen del evento
-              height: 200,
-              width: double.infinity,
-              fit: BoxFit.cover,
+      child: Column(
+        children: [
+          Card(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Image.network(
+                  _latestEvent!['event_image'], // Imagen del evento
+                  height: 200,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
+                Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        _latestEvent!['event_name'], // Título del evento
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Fecha: ${_latestEvent!['event_date']}', // Fecha del evento
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 16,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Ubicación: ${_latestEvent!['location']}', // Ubicación del evento
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 16,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        _latestEvent![
+                            'event_description'], // Descripción del evento
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 16,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            Padding(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    _latestEvent!['event_name'], // Título del evento
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Fecha: ${_latestEvent!['event_date']}', // Fecha del evento
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 16,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Ubicación: ${_latestEvent!['location']}', // Ubicación del evento
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 16,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    _latestEvent![
-                        'event_description'], // Descripción del evento
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 16,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                ],
+          ),
+          SizedBox(height: 20), // Espacio entre la tarjeta y el botón
+          ElevatedButton(
+            onPressed: () {
+              // Acción que se ejecuta cuando se presiona el botón
+              print('Botón presionado!');
+              // Aquí puedes agregar la lógica que desees, como navegar a otra pantalla
+            },
+            child: Text('Ver todos los eventos'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color(0xFFdddbff), // Color naranja
+              foregroundColor: Color(0xFF101010),
+              padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+              textStyle: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

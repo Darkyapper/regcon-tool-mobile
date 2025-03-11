@@ -33,6 +33,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         Uri.parse('https://recgonback-8awa0rdv.b4a.run/event-categories');
     final response = await http.get(url);
 
+    if (!mounted) return; // Verifica si el widget sigue en el árbol
+
     if (response.statusCode == 200) {
       final decodedResponse = json.decode(response.body);
       setState(() {
