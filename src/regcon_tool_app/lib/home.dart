@@ -4,6 +4,7 @@ import 'shared_prefs.dart';
 import 'dart:convert'; // Para manejar JSON
 import 'package:http/http.dart' as http; // Para hacer solicitudes HTTP
 import 'createEvent.dart';
+import 'my_events.dart';
 
 class AdminHomeScreen extends StatefulWidget {
   const AdminHomeScreen({super.key});
@@ -252,6 +253,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
         unselectedItemColor: Color(0xFFAAA9B2),
         onTap: _onItemTapped,
         type: BottomNavigationBarType.fixed,
+        selectedLabelStyle: const TextStyle(
+            fontFamily: 'Poppins', fontSize: 14, fontWeight: FontWeight.bold),
+        unselectedLabelStyle: const TextStyle(
+            fontFamily: 'Poppins', fontSize: 12, fontWeight: FontWeight.normal),
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -259,11 +264,11 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.event),
-            label: 'Mis Eventos',
+            label: 'Eventos',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.add),
-            label: 'Crear Evento',
+            label: 'Crear',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
@@ -280,7 +285,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       case 0: // Inicio
         return _buildLatestEvent();
       case 1: // Mis Eventos
-        return Center(child: Text('Mis Eventos'));
+        return MyEventsPage();
       case 2: // Crear Evento
         return CreateEventScreen();
       case 3: // Perfil
