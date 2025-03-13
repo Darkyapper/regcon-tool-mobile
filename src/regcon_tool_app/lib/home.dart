@@ -195,6 +195,24 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     }
   }
 
+  Future<void> _refreshData() async {
+    setState(() {
+      _isLoading = true;
+    });
+    await Future.wait([
+      _loadLatestEvent(),
+      _fetchName(),
+      _fecthGains(),
+      _fecthCredits(),
+    ]);
+  }
+
+  String _truncateText(String text, int wordLimit) {
+    List<String> words = text.split(' ');
+    if (words.length <= wordLimit) return text;
+    return '${words.sublist(0, wordLimit).join(' ')}...';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -226,7 +244,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
           ),
         ],
       ),
-      body: _buildBody(), // Contenido principal de la pantalla
+      body: RefreshIndicator(onRefresh: _refreshData, child: _buildBody()),
+      // Contenido principal de la pantalla
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         selectedItemColor: Color(0xFF7C79DC),
@@ -402,8 +421,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                       ),
                       SizedBox(height: 8),
                       Text(
-                        _latestEvent![
-                            'event_description'], // Descripción del evento
+                        _truncateText(_latestEvent!['event_description'],
+                            20), // Descripción del evento
                         style: TextStyle(
                           fontFamily: 'Poppins',
                           fontSize: 16,
