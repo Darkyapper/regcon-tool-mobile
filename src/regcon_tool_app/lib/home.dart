@@ -330,7 +330,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                         SizedBox(height: 8),
                         RichText(
                             text: TextSpan(
-                                text: 'Creditos Disponibles: ',
+                                text: 'Créditos Disponibles: ',
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.black,
@@ -414,13 +414,13 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                         onPressed: () {
                           print('botón pulsado');
                         },
-                        child: Text('Ver Detalles'),
                         style: TextButton.styleFrom(
                             foregroundColor: Color(0xFF101010),
                             textStyle: TextStyle(
                               fontFamily: 'Poppins',
                               fontWeight: FontWeight.w400,
                             )),
+                        child: Text('Ver Detalles'),
                       ),
                     ],
                   ),
@@ -435,7 +435,6 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
               print('Botón presionado!');
               // Aquí puedes agregar la lógica que desees, como navegar a otra pantalla
             },
-            child: Text('Ver todos los eventos'),
             style: ElevatedButton.styleFrom(
               backgroundColor: Color(0xFF3A31D8), // Color naranja
               foregroundColor: Color(0xFFF0F0F0),
@@ -446,6 +445,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            child: Text('Ver todos los eventos'),
           ),
         ],
       ),

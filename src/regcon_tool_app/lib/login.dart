@@ -27,7 +27,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
         if (success) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Login exitoso')),
+            SnackBar(
+              content: Text('Login exitoso'),
+              duration: Duration(seconds: 3),
+              action: SnackBarAction(label: '', onPressed: () {}),
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              dismissDirection: DismissDirection.horizontal,
+            ),
           );
           Navigator.pushReplacement(
             context,
@@ -35,12 +44,30 @@ class _LoginScreenState extends State<LoginScreen> {
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error en el login')),
+            SnackBar(
+              content: Text('Error en el login'),
+              duration: Duration(seconds: 3),
+              action: SnackBarAction(label: '', onPressed: () {}),
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              dismissDirection: DismissDirection.horizontal,
+            ),
           );
         }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
+          SnackBar(
+            content: Text('Error: $e'),
+            duration: Duration(seconds: 3),
+            action: SnackBarAction(label: '', onPressed: () {}),
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            dismissDirection: DismissDirection.horizontal,
+          ),
         );
         print('Error durante el login: $e'); // Log para depuración
       } finally {

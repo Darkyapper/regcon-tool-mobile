@@ -117,7 +117,12 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Crear Evento'),
-        backgroundColor: const Color(0xFFEB6D1E),
+        titleTextStyle: TextStyle(
+          fontFamily: 'Poppins',
+          fontWeight: FontWeight.bold,
+          color: Color(0xFF101010),
+          fontSize: 26,
+        ),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
