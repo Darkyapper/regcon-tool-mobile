@@ -270,10 +270,6 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
             icon: Icon(Icons.add),
             label: 'Crear',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Perfil',
-          ),
         ],
       ),
     );
@@ -453,24 +449,6 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
             ),
           ),
           SizedBox(height: 10), // Espacio entre la tarjeta y el botón
-          ElevatedButton(
-            onPressed: () {
-              // Acción que se ejecuta cuando se presiona el botón
-              print('Botón presionado!');
-              // Aquí puedes agregar la lógica que desees, como navegar a otra pantalla
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFF3A31D8), // Color naranja
-              foregroundColor: Color(0xFFF0F0F0),
-              padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-              textStyle: TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            child: Text('Ver todos los eventos'),
-          ),
         ],
       ),
     );

@@ -35,6 +35,9 @@ dependencies:
   shared_preferences: ^2.0.6 # Para guardar el token localmente
   fluttertoast: ^8.0.8 # Para mostrar mensajes toast 
   image_picker: ^1.0.4 # Para seleccionar la imagen
+  intl: ^0.20.2
+  dotted_border: ^2.0.0+3
+  http_parser: ^4.0.2
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
